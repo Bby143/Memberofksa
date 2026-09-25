@@ -1,116 +1,112 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#166534">
-  <title>POGA KSA Member Management System</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="manifest" href="manifest.json">
-</head>
-<body>
 <div class="container">
-  <header>
-    <h1>POGA KSA Member Management System</h1>
-    <p>Offline Member Records</p>
-  </header>
 
-  <section class="form-section">
-    <h2 id="formTitle">Add Member</h2>
-    <form id="memberForm">
-      <div class="form-grid">
-        <div class="form-group">
-          <label for="memberId">Member ID</label>
-          <input type="text" id="memberId" placeholder="Example: POGA001" required>
-        </div>
+  <h1>POGA KSA Member Registration</h1>
 
-        <div class="form-group">
-          <label for="fullName">Full Name</label>
-          <input type="text" id="fullName" placeholder="Full name" required>
-        </div>
+  <div class="form">
 
-        <div class="form-group">
-          <label for="passportNumber">Passport Number</label>
-          <input type="text" id="passportNumber" placeholder="Passport number">
-        </div>
+    <input
+      type="text"
+      id="fullName"
+      placeholder="Full Name"
+      required
+    >
 
-        <div class="form-group">
-          <label for="birthday">Birthday</label>
-          <input type="date" id="birthday">
-        </div>
+    <input
+      type="text"
+      id="memberCode"
+      placeholder="Member Code"
+    >
 
-        <div class="form-group full-width">
-          <label for="address">Address</label>
-          <textarea id="address" placeholder="Complete address" rows="3"></textarea>
-        </div>
+    <input
+      type="tel"
+      id="phone"
+      placeholder="Contact Number"
+    >
 
-        <div class="form-group">
-          <label for="contact">Contact Number</label>
-          <input type="text" id="contact" placeholder="Contact number">
-        </div>
+    <input
+      type="email"
+      id="email"
+      placeholder="Email Address"
+    >
 
-        <div class="form-group">
-          <label for="emergencyContact">Emergency Contact Person</label>
-          <input type="text" id="emergencyContact" placeholder="Name of emergency contact">
-        </div>
+    <label for="birthday">Birthday</label>
+    <input
+      type="date"
+      id="birthday"
+    >
 
-        <div class="form-group">
-          <label for="emergencyNumber">Emergency Contact Number</label>
-          <input type="text" id="emergencyNumber" placeholder="Emergency contact number">
-        </div>
+    <input
+      type="text"
+      id="passportNumber"
+      placeholder="Passport Number"
+    >
 
-        <div class="form-group">
-          <label for="status">Membership Status</label>
-          <select id="status">
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
-          </select>
-        </div>
+    <textarea
+      id="address"
+      placeholder="Address"
+      rows="3"
+    ></textarea>
 
-        <div class="form-group full-width">
-          <label for="photo">Member Photo</label>
-          <input type="file" id="photo" accept="image/*">
-          <div id="photoPreview"></div>
-        </div>
-      </div>
+    <input
+      type="text"
+      id="emergencyContactPerson"
+      placeholder="Emergency Contact Person"
+    >
 
-      <div class="form-buttons">
-        <button type="submit" id="saveButton" class="btn-primary">Add Member</button>
-        <button type="button" id="cancelButton" class="btn-secondary hidden">Cancel</button>
-      </div>
-    </form>
-  </section>
+    <input
+      type="tel"
+      id="emergencyContactNumber"
+      placeholder="Emergency Contact Number"
+    >
 
-  <section class="member-section">
-    <div class="section-header">
-      <h2>Member Records</h2>
-      <input type="text" id="search" placeholder="Search member...">
-    </div>
+    <label for="photo">Member Photo</label>
 
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Photo</th>
-            <th>Member ID</th>
-            <th>Full Name</th>
-            <th>Passport</th>
-            <th>Birthday</th>
-            <th>Contact</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="memberTable"></tbody>
-      </table>
-    </div>
+    <input
+      type="file"
+      id="photo"
+      accept="image/jpeg,image/png,image/webp"
+    >
 
-    <p id="emptyMessage" class="empty-message">No member records found.</p>
-  </section>
+    <button
+      id="saveButton"
+      onclick="saveMember()"
+    >
+      Add Member
+    </button>
+
+  </div>
+
+
+  <!-- SEARCH -->
+
+  <input
+    type="text"
+    id="search"
+    class="search"
+    placeholder="Search member..."
+    onkeyup="searchMember()"
+  >
+
+
+  <!-- MEMBERS TABLE -->
+
+  <table>
+
+    <thead>
+
+      <tr>
+        <th>Member Code</th>
+        <th>Name</th>
+        <th>Contact</th>
+        <th>Email</th>
+        <th>Address</th>
+        <th>Action</th>
+      </tr>
+
+    </thead>
+
+    <tbody id="memberTable"></tbody>
+
+  </table>
+
 </div>
-
-<script src="script.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="script.js"></script>
-</body>
-</html>
