@@ -203,3 +203,268 @@ function escapeHTML(value) {
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
 }
+
+// ==========================================
+// POGA KSA MEMBER REGISTRATION
+// SUPABASE CONNECTION
+// ==========================================
+
+const SUPABASE_URL =
+  "https://fbxiositmlcyvqlvkhsz.supabase.co";
+
+const SUPABASE_KEY =
+  "ILAGAY_DITO_ANG_SB_PUBLISHABLE_KEY_MO";
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+// ==========================================
+// REGISTRATION FORM
+// ==========================================
+
+const form = document.getElementById("registrationForm");
+const message = document.getElementById("message");
+const submitBtn = document.getElementById("submitBtn");
+
+
+// Check if form exists
+if (form) {
+
+  form.addEventListener("submit", async function (event) {
+
+    event.preventDefault();
+
+    message.textContent = "";
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Submitting...";
+
+    try {
+
+      // --------------------------------------
+      // GET FORM VALUES
+      // --------------------------------------
+
+      const fullName =
+        document.getElementById("full_name").value.trim();
+
+      const memberCode =
+        document.getElementById("member_code").value.trim();
+
+      const phone =
+        document.getElementById("phone").value.trim();
+
+      const email =
+        document.getElementById("email").value.trim();
+
+      const birthday =
+        document.getElementById("birthday").value || null;
+
+      const passportNumber =
+        document
+          .getElementById("passport_number")
+          .value
+          .trim();
+
+      const address =
+        document
+          .getElementById("address")
+          .value
+          .trim();
+
+      const emergencyPerson =
+        document
+          .getElementById("emergency_contact_person")
+          .value
+          .trim();
+
+      const emergencyNumber =
+        document
+          .getElementById("emergency_contact_number")
+          .value
+          .trim();
+
+      const photoInput =
+        document.getElementById("photo");
+
+      const photoFile =
+        photoInput.files[0];
+
+
+      // --------------------------------------
+      // REQUIRED FIELD
+      // --------------------------------------
+
+      if (!fullName) {
+
+        throw new Error(
+          "Please enter your full name."
+        );
+
+      }
+
+
+      // --------------------------------------
+      // PHOTO UPLOAD
+      // --------------------------------------
+
+      let photoUrl = null;
+
+      if (photoFile) {
+
+        const allowedTypes = [
+          "image/jpeg",
+          "image/png",
+          "image/webp"
+        ];
+
+        if (!allowedTypes.includes(photoFile.type)) {
+
+          throw new Error(
+            "Please upload a JPG, PNG, or WEBP photo."
+          );
+
+        }
+
+
+        // Maximum 5 MB
+
+        if (photoFile.size > 5 * 1024 * 1024) {
+
+          throw new Error(
+            "Photo must be smaller than 5 MB."
+          );
+
+        }
+
+
+        const extension =
+          photoFile.name
+            .split(".")
+            .pop()
+            .toLowerCase();
+
+
+        const fileName =
+          crypto.randomUUID() +
+          "." +
+          extension;
+
+
+        const { error: uploadError } =
+          await supabaseClient
+            .storage
+            .from("member-photos")
+            .upload(
+              fileName,
+              photoFile
+            );
+
+
+        if (uploadError) {
+
+          throw uploadError;
+
+        }
+
+
+        photoUrl = fileName;
+
+      }
+
+
+      // --------------------------------------
+      // SAVE MEMBER INFORMATION
+      // --------------------------------------
+
+      const { error: insertError } =
+        await supabaseClient
+          .from("members")
+          .insert({
+
+            full_name: fullName,
+
+            member_code:
+              memberCode || null,
+
+            phone:
+              phone || null,
+
+            email:
+              email || null,
+
+            birthday:
+              birthday,
+
+            passport_number:
+              passportNumber || null,
+
+            address:
+              address || null,
+
+            emergency_contact_person:
+              emergencyPerson || null,
+
+            emergency_contact_number:
+              emergencyNumber || null,
+
+            photo_url:
+              photoUrl
+
+          });
+
+
+      if (insertError) {
+
+        throw insertError;
+
+      }
+
+
+      // --------------------------------------
+      // SUCCESS
+      // --------------------------------------
+
+      message.textContent =
+        "Registration successful! Thank you.";
+
+      message.style.color =
+        "green";
+
+
+      // Clear form
+
+      form.reset();
+
+
+    } catch (error) {
+
+      console.error(
+        "Registration error:",
+        error
+      );
+
+
+      message.textContent =
+        "Registration failed: " +
+        error.message;
+
+      message.style.color =
+        "red";
+
+
+    } finally {
+
+      submitBtn.disabled = false;
+
+      submitBtn.textContent =
+        "Submit Registration";
+
+    }
+
+  });
+
+}
